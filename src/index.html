@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html><head><title>Basic sigma.js example</title>
+<style type="text/css">body {margin: 0;}#container {position: absolute;width: 100%; height: 100%;}</style>
+</head>
+<body>
+<div id="container"></div>
+<!-- START SIGMA IMPORTS -->
+<script src="./dist/src/sigma.core.js"></script>
+<script src="./dist/src/conrad.js"></script>
+<script src="./dist/src/utils/sigma.utils.js"></script>
+<script src="./dist/src/utils/sigma.polyfills.js"></script>
+<script src="./dist/src/sigma.settings.js"></script>
+<script src="./dist/src/classes/sigma.classes.dispatcher.js"></script>
+<script src="./dist/src/classes/sigma.classes.configurable.js"></script>
+<script src="./dist/src/classes/sigma.classes.graph.js"></script>
+<script src="./dist/src/classes/sigma.classes.camera.js"></script>
+<script src="./dist/src/classes/sigma.classes.quad.js"></script>
+<script src="./dist/src/captors/sigma.captors.mouse.js"></script>
+<script src="./dist/src/captors/sigma.captors.touch.js"></script>
+<script src="./dist/src/renderers/sigma.renderers.canvas.js"></script>
+<script src="./dist/src/renderers/sigma.renderers.webgl.js"></script>
+<script src="./dist/src/renderers/sigma.renderers.svg.js"></script>
+<script src="./dist/src/renderers/sigma.renderers.def.js"></script>
+<script src="./dist/src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="./dist/src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="./dist/src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="./dist/src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="./dist/src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="./dist/src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="./dist/src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="./dist/src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="./dist/src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="./dist/src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="./dist/src/renderers/svg/sigma.svg.edges.curvedArrow.js"></script>
+<script src="./dist/src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="./dist/src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="./dist/src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="./dist/src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="./dist/src/misc/sigma.misc.animation.js"></script>
+<script src="./dist/src/misc/sigma.misc.bindEvents.js"></script>
+<script src="./dist/src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="./dist/src/misc/sigma.misc.drawHovers.js"></script>
+<!-- END SIGMA IMPORTS -->
+<script src="./dist/plugins/sigma.helpers.graph/sigma.helpers.graph.js"></script>
+<script src="./dist/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+<script src="./dist/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+<script src="./dist/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
+<script src="./dist/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+<script>
+g = {nodes: [],edges: []};
+g.nodes.push({id:'Rothia;',label:'Rothia;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.nodes.push({id:'Fusobacterium;',label:'Fusobacterium;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:1,label:'-0.450906',source:'Rothia;',target:'Fusobacterium;',size:0.450906,color: 'rgb(0,114,0)',type:'line'});
+g.nodes.push({id:'Streptococcus;',label:'Streptococcus;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:2,label:'0.20818',source:'Rothia;',target:'Streptococcus;',size:0.20818,color: 'rgb(53,0,0)',type:'line'});
+g.nodes.push({id:'Leptotrichia;',label:'Leptotrichia;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:3,label:'-0.655135',source:'Rothia;',target:'Leptotrichia;',size:0.655135,color: 'rgb(0,167,0)',type:'line'});
+g.nodes.push({id:'Lautropia;',label:'Lautropia;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:4,label:'0.285113',source:'Rothia;',target:'Lautropia;',size:0.285113,color: 'rgb(72,0,0)',type:'line'});
+g.nodes.push({id:'Unclassified',label:'Unclassified',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:5,label:'-0.623342',source:'Rothia;',target:'Unclassified',size:0.623342,color: 'rgb(0,158,0)',type:'line'});
+g.nodes.push({id:'Porphyromonas;',label:'Porphyromonas;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:6,label:'-0.418644',source:'Rothia;',target:'Porphyromonas;',size:0.418644,color: 'rgb(0,106,0)',type:'line'});
+g.nodes.push({id:'Kingella;',label:'Kingella;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:7,label:'0.265706',source:'Rothia;',target:'Kingella;',size:0.265706,color: 'rgb(67,0,0)',type:'line'});
+g.nodes.push({id:'Tannerella;',label:'Tannerella;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:8,label:'-0.520358',source:'Rothia;',target:'Tannerella;',size:0.520358,color: 'rgb(0,132,0)',type:'line'});
+g.nodes.push({id:'Actinomyces;',label:'Actinomyces;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:9,label:'0.260623',source:'Rothia;',target:'Actinomyces;',size:0.260623,color: 'rgb(66,0,0)',type:'line'});
+g.nodes.push({id:'Campylobacter;',label:'Campylobacter;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:10,label:'-0.485237',source:'Rothia;',target:'Campylobacter;',size:0.485237,color: 'rgb(0,123,0)',type:'line'});
+g.nodes.push({id:'Neisseria;',label:'Neisseria;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:11,label:'-0.238259',source:'Rothia;',target:'Neisseria;',size:0.238259,color: 'rgb(0,60,0)',type:'line'});
+g.nodes.push({id:'Aggregatibacter;',label:'Aggregatibacter;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:12,label:'-0.423557',source:'Rothia;',target:'Aggregatibacter;',size:0.423557,color: 'rgb(0,108,0)',type:'line'});
+g.nodes.push({id:'Prevotella;',label:'Prevotella;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:13,label:'-0.572764',source:'Rothia;',target:'Prevotella;',size:0.572764,color: 'rgb(0,146,0)',type:'line'});
+g.nodes.push({id:'Selenomonas;',label:'Selenomonas;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:14,label:'-0.601127',source:'Rothia;',target:'Selenomonas;',size:0.601127,color: 'rgb(0,153,0)',type:'line'});
+g.nodes.push({id:'Catonella;',label:'Catonella;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:15,label:'-0.527754',source:'Rothia;',target:'Catonella;',size:0.527754,color: 'rgb(0,134,0)',type:'line'});
+g.nodes.push({id:'Veillonella;',label:'Veillonella;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:16,label:'-0.170691',source:'Rothia;',target:'Veillonella;',size:0.170691,color: 'rgb(0,43,0)',type:'line'});
+g.edges.push({id:17,label:'-0.467256',source:'Fusobacterium;',target:'Streptococcus;',size:0.467256,color: 'rgb(0,119,0)',type:'line'});
+g.edges.push({id:18,label:'0.497839',source:'Fusobacterium;',target:'Leptotrichia;',size:0.497839,color: 'rgb(126,0,0)',type:'line'});
+g.edges.push({id:19,label:'-0.209876',source:'Fusobacterium;',target:'Lautropia;',size:0.209876,color: 'rgb(0,53,0)',type:'line'});
+g.edges.push({id:20,label:'0.447897',source:'Fusobacterium;',target:'Unclassified',size:0.447897,color: 'rgb(114,0,0)',type:'line'});
+g.edges.push({id:21,label:'0.625293',source:'Fusobacterium;',target:'Porphyromonas;',size:0.625293,color: 'rgb(159,0,0)',type:'line'});
+g.nodes.push({id:'Cardiobacterium;',label:'Cardiobacterium;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:22,label:'0.206393',source:'Fusobacterium;',target:'Cardiobacterium;',size:0.206393,color: 'rgb(52,0,0)',type:'line'});
+g.nodes.push({id:'Haemophilus;',label:'Haemophilus;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:23,label:'-0.369265',source:'Fusobacterium;',target:'Haemophilus;',size:0.369265,color: 'rgb(0,94,0)',type:'line'});
+g.edges.push({id:24,label:'-0.410544',source:'Fusobacterium;',target:'Kingella;',size:0.410544,color: 'rgb(0,104,0)',type:'line'});
+g.nodes.push({id:'Corynebacterium;',label:'Corynebacterium;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:25,label:'0.505263',source:'Fusobacterium;',target:'Corynebacterium;',size:0.505263,color: 'rgb(128,0,0)',type:'line'});
+g.edges.push({id:26,label:'0.590983',source:'Fusobacterium;',target:'Tannerella;',size:0.590983,color: 'rgb(150,0,0)',type:'line'});
+g.edges.push({id:27,label:'-0.388678',source:'Fusobacterium;',target:'Actinomyces;',size:0.388678,color: 'rgb(0,99,0)',type:'line'});
+g.edges.push({id:28,label:'0.201129',source:'Fusobacterium;',target:'Campylobacter;',size:0.201129,color: 'rgb(51,0,0)',type:'line'});
+g.edges.push({id:29,label:'0.339794',source:'Fusobacterium;',target:'Aggregatibacter;',size:0.339794,color: 'rgb(86,0,0)',type:'line'});
+g.nodes.push({id:'Capnocytophaga;',label:'Capnocytophaga;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:30,label:'0.246715',source:'Fusobacterium;',target:'Capnocytophaga;',size:0.246715,color: 'rgb(62,0,0)',type:'line'});
+g.nodes.push({id:'Granulicatella;',label:'Granulicatella;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:31,label:'-0.324605',source:'Fusobacterium;',target:'Granulicatella;',size:0.324605,color: 'rgb(0,82,0)',type:'line'});
+g.edges.push({id:32,label:'0.496252',source:'Fusobacterium;',target:'Prevotella;',size:0.496252,color: 'rgb(126,0,0)',type:'line'});
+g.edges.push({id:33,label:'0.63689',source:'Fusobacterium;',target:'Selenomonas;',size:0.63689,color: 'rgb(162,0,0)',type:'line'});
+g.nodes.push({id:'Eikenella;',label:'Eikenella;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:34,label:'0.410321',source:'Fusobacterium;',target:'Eikenella;',size:0.410321,color: 'rgb(104,0,0)',type:'line'});
+g.edges.push({id:35,label:'0.502707',source:'Fusobacterium;',target:'Catonella;',size:0.502707,color: 'rgb(128,0,0)',type:'line'});
+g.nodes.push({id:'Gemella;',label:'Gemella;',x: Math.random(),y: Math.random(),size: Math.random(),color: '#666'});
+g.edges.push({id:36,label:'0.343482',source:'Fusobacterium;',target:'Gemella;',size:0.343482,color: 'rgb(87,0,0)',type:'line'});
+g.edges.push({id:37,label:'-0.216843',source:'Fusobacterium;',target:'Veillonella;',size:0.216843,color: 'rgb(0,55,0)',type:'line'});
+g.edges.push({id:38,label:'-0.568742',source:'Streptococcus;',target:'Leptotrichia;',size:0.568742,color: 'rgb(0,145,0)',type:'line'});
+g.edges.push({id:39,label:'0.353954',source:'Streptococcus;',target:'Lautropia;',size:0.353954,color: 'rgb(90,0,0)',type:'line'});
+g.edges.push({id:40,label:'-0.608861',source:'Streptococcus;',target:'Unclassified',size:0.608861,color: 'rgb(0,155,0)',type:'line'});
+g.edges.push({id:41,label:'-0.313833',source:'Streptococcus;',target:'Porphyromonas;',size:0.313833,color: 'rgb(0,80,0)',type:'line'});
+g.edges.push({id:42,label:'0.27962',source:'Streptococcus;',target:'Haemophilus;',size:0.27962,color: 'rgb(71,0,0)',type:'line'});
+g.edges.push({id:43,label:'-0.547559',source:'Streptococcus;',target:'Tannerella;',size:0.547559,color: 'rgb(0,139,0)',type:'line'});
+g.edges.push({id:44,label:'0.308641',source:'Streptococcus;',target:'Actinomyces;',size:0.308641,color: 'rgb(78,0,0)',type:'line'});
+g.edges.push({id:45,label:'-0.346468',source:'Streptococcus;',target:'Campylobacter;',size:0.346468,color: 'rgb(0,88,0)',type:'line'});
+g.edges.push({id:46,label:'-0.196972',source:'Streptococcus;',target:'Neisseria;',size:0.196972,color: 'rgb(0,50,0)',type:'line'});
+g.edges.push({id:47,label:'-0.546489',source:'Streptococcus;',target:'Aggregatibacter;',size:0.546489,color: 'rgb(0,139,0)',type:'line'});
+g.edges.push({id:48,label:'-0.338266',source:'Streptococcus;',target:'Capnocytophaga;',size:0.338266,color: 'rgb(0,86,0)',type:'line'});
+g.edges.push({id:49,label:'0.569088',source:'Streptococcus;',target:'Granulicatella;',size:0.569088,color: 'rgb(145,0,0)',type:'line'});
+g.edges.push({id:50,label:'-0.562668',source:'Streptococcus;',target:'Prevotella;',size:0.562668,color: 'rgb(0,143,0)',type:'line'});
+g.edges.push({id:51,label:'-0.618325',source:'Streptococcus;',target:'Selenomonas;',size:0.618325,color: 'rgb(0,157,0)',type:'line'});
+g.edges.push({id:52,label:'-0.31127',source:'Streptococcus;',target:'Eikenella;',size:0.31127,color: 'rgb(0,79,0)',type:'line'});
+g.edges.push({id:53,label:'-0.401284',source:'Streptococcus;',target:'Catonella;',size:0.401284,color: 'rgb(0,102,0)',type:'line'});
+g.edges.push({id:54,label:'0.108207',source:'Streptococcus;',target:'Gemella;',size:0.108207,color: 'rgb(27,0,0)',type:'line'});
+g.edges.push({id:55,label:'0.571017',source:'Streptococcus;',target:'Veillonella;',size:0.571017,color: 'rgb(145,0,0)',type:'line'});
+g.edges.push({id:56,label:'-0.518537',source:'Leptotrichia;',target:'Lautropia;',size:0.518537,color: 'rgb(0,132,0)',type:'line'});
+g.edges.push({id:57,label:'0.732992',source:'Leptotrichia;',target:'Unclassified',size:0.732992,color: 'rgb(186,0,0)',type:'line'});
+g.edges.push({id:58,label:'0.466751',source:'Leptotrichia;',target:'Porphyromonas;',size:0.466751,color: 'rgb(119,0,0)',type:'line'});
+g.edges.push({id:59,label:'-0.178767',source:'Leptotrichia;',target:'Cardiobacterium;',size:0.178767,color: 'rgb(0,45,0)',type:'line'});
+g.edges.push({id:60,label:'-0.455267',source:'Leptotrichia;',target:'Haemophilus;',size:0.455267,color: 'rgb(0,116,0)',type:'line'});
+g.edges.push({id:61,label:'-0.501564',source:'Leptotrichia;',target:'Kingella;',size:0.501564,color: 'rgb(0,127,0)',type:'line'});
+g.edges.push({id:62,label:'-0.105017',source:'Leptotrichia;',target:'Corynebacterium;',size:0.105017,color: 'rgb(0,26,0)',type:'line'});
+g.edges.push({id:63,label:'0.714778',source:'Leptotrichia;',target:'Tannerella;',size:0.714778,color: 'rgb(182,0,0)',type:'line'});
+g.edges.push({id:64,label:'-0.580474',source:'Leptotrichia;',target:'Actinomyces;',size:0.580474,color: 'rgb(0,148,0)',type:'line'});
+g.edges.push({id:65,label:'0.629099',source:'Leptotrichia;',target:'Campylobacter;',size:0.629099,color: 'rgb(160,0,0)',type:'line'});
+g.edges.push({id:66,label:'0.1159',source:'Leptotrichia;',target:'Neisseria;',size:0.1159,color: 'rgb(29,0,0)',type:'line'});
+g.edges.push({id:67,label:'0.4956',source:'Leptotrichia;',target:'Aggregatibacter;',size:0.4956,color: 'rgb(126,0,0)',type:'line'});
+g.edges.push({id:68,label:'-0.204706',source:'Leptotrichia;',target:'Capnocytophaga;',size:0.204706,color: 'rgb(0,52,0)',type:'line'});
+g.edges.push({id:69,label:'-0.285231',source:'Leptotrichia;',target:'Granulicatella;',size:0.285231,color: 'rgb(0,72,0)',type:'line'});
+g.edges.push({id:70,label:'0.776649',source:'Leptotrichia;',target:'Prevotella;',size:0.776649,color: 'rgb(198,0,0)',type:'line'});
+g.edges.push({id:71,label:'0.753909',source:'Leptotrichia;',target:'Selenomonas;',size:0.753909,color: 'rgb(192,0,0)',type:'line'});
+g.edges.push({id:72,label:'0.752064',source:'Leptotrichia;',target:'Catonella;',size:0.752064,color: 'rgb(191,0,0)',type:'line'});
+g.edges.push({id:73,label:'-0.22834',source:'Leptotrichia;',target:'Veillonella;',size:0.22834,color: 'rgb(0,58,0)',type:'line'});
+g.edges.push({id:74,label:'-0.300984',source:'Lautropia;',target:'Unclassified',size:0.300984,color: 'rgb(0,76,0)',type:'line'});
+g.edges.push({id:75,label:'0.245885',source:'Lautropia;',target:'Cardiobacterium;',size:0.245885,color: 'rgb(62,0,0)',type:'line'});
+g.edges.push({id:76,label:'0.195104',source:'Lautropia;',target:'Haemophilus;',size:0.195104,color: 'rgb(49,0,0)',type:'line'});
+g.edges.push({id:77,label:'0.186105',source:'Lautropia;',target:'Corynebacterium;',size:0.186105,color: 'rgb(47,0,0)',type:'line'});
+g.edges.push({id:78,label:'-0.382479',source:'Lautropia;',target:'Tannerella;',size:0.382479,color: 'rgb(0,97,0)',type:'line'});
+g.edges.push({id:79,label:'0.280524',source:'Lautropia;',target:'Actinomyces;',size:0.280524,color: 'rgb(71,0,0)',type:'line'});
+g.edges.push({id:80,label:'-0.377546',source:'Lautropia;',target:'Campylobacter;',size:0.377546,color: 'rgb(0,96,0)',type:'line'});
+g.edges.push({id:81,label:'-0.164944',source:'Lautropia;',target:'Neisseria;',size:0.164944,color: 'rgb(0,42,0)',type:'line'});
+g.edges.push({id:82,label:'-0.527033',source:'Lautropia;',target:'Prevotella;',size:0.527033,color: 'rgb(0,134,0)',type:'line'});
+g.edges.push({id:83,label:'-0.499415',source:'Lautropia;',target:'Selenomonas;',size:0.499415,color: 'rgb(0,127,0)',type:'line'});
+g.edges.push({id:84,label:'-0.231534',source:'Lautropia;',target:'Eikenella;',size:0.231534,color: 'rgb(0,59,0)',type:'line'});
+g.edges.push({id:85,label:'-0.483896',source:'Lautropia;',target:'Catonella;',size:0.483896,color: 'rgb(0,123,0)',type:'line'});
+g.edges.push({id:86,label:'-0.207112',source:'Lautropia;',target:'Veillonella;',size:0.207112,color: 'rgb(0,52,0)',type:'line'});
+g.edges.push({id:87,label:'0.328303',source:'Unclassified',target:'Porphyromonas;',size:0.328303,color: 'rgb(83,0,0)',type:'line'});
+g.edges.push({id:88,label:'-0.460311',source:'Unclassified',target:'Haemophilus;',size:0.460311,color: 'rgb(0,117,0)',type:'line'});
+g.edges.push({id:89,label:'-0.281514',source:'Unclassified',target:'Kingella;',size:0.281514,color: 'rgb(0,71,0)',type:'line'});
+g.edges.push({id:90,label:'0.576969',source:'Unclassified',target:'Tannerella;',size:0.576969,color: 'rgb(147,0,0)',type:'line'});
+g.edges.push({id:91,label:'-0.674105',source:'Unclassified',target:'Actinomyces;',size:0.674105,color: 'rgb(0,171,0)',type:'line'});
+g.edges.push({id:92,label:'0.319946',source:'Unclassified',target:'Campylobacter;',size:0.319946,color: 'rgb(81,0,0)',type:'line'});
+g.edges.push({id:93,label:'0.370939',source:'Unclassified',target:'Neisseria;',size:0.370939,color: 'rgb(94,0,0)',type:'line'});
+g.edges.push({id:94,label:'0.567031',source:'Unclassified',target:'Aggregatibacter;',size:0.567031,color: 'rgb(144,0,0)',type:'line'});
+g.edges.push({id:95,label:'0.170121',source:'Unclassified',target:'Capnocytophaga;',size:0.170121,color: 'rgb(43,0,0)',type:'line'});
+g.edges.push({id:96,label:'-0.371895',source:'Unclassified',target:'Granulicatella;',size:0.371895,color: 'rgb(0,94,0)',type:'line'});
+g.edges.push({id:97,label:'0.681187',source:'Unclassified',target:'Prevotella;',size:0.681187,color: 'rgb(173,0,0)',type:'line'});
+g.edges.push({id:98,label:'0.650136',source:'Unclassified',target:'Selenomonas;',size:0.650136,color: 'rgb(165,0,0)',type:'line'});
+g.edges.push({id:99,label:'0.272135',source:'Unclassified',target:'Eikenella;',size:0.272135,color: 'rgb(69,0,0)',type:'line'});
+g.edges.push({id:100,label:'0.542184',source:'Unclassified',target:'Catonella;',size:0.542184,color: 'rgb(138,0,0)',type:'line'});
+g.edges.push({id:101,label:'-0.329647',source:'Unclassified',target:'Veillonella;',size:0.329647,color: 'rgb(0,84,0)',type:'line'});
+g.edges.push({id:102,label:'-0.376706',source:'Porphyromonas;',target:'Haemophilus;',size:0.376706,color: 'rgb(0,96,0)',type:'line'});
+g.edges.push({id:103,label:'-0.327431',source:'Porphyromonas;',target:'Kingella;',size:0.327431,color: 'rgb(0,83,0)',type:'line'});
+g.edges.push({id:104,label:'0.493567',source:'Porphyromonas;',target:'Corynebacterium;',size:0.493567,color: 'rgb(125,0,0)',type:'line'});
+g.edges.push({id:105,label:'0.648022',source:'Porphyromonas;',target:'Tannerella;',size:0.648022,color: 'rgb(165,0,0)',type:'line'});
+g.edges.push({id:106,label:'-0.42374',source:'Porphyromonas;',target:'Actinomyces;',size:0.42374,color: 'rgb(0,108,0)',type:'line'});
+g.edges.push({id:107,label:'0.147698',source:'Porphyromonas;',target:'Neisseria;',size:0.147698,color: 'rgb(37,0,0)',type:'line'});
+g.edges.push({id:108,label:'0.611999',source:'Porphyromonas;',target:'Aggregatibacter;',size:0.611999,color: 'rgb(156,0,0)',type:'line'});
+g.edges.push({id:109,label:'-0.273781',source:'Porphyromonas;',target:'Granulicatella;',size:0.273781,color: 'rgb(0,69,0)',type:'line'});
+g.edges.push({id:110,label:'0.423322',source:'Porphyromonas;',target:'Prevotella;',size:0.423322,color: 'rgb(107,0,0)',type:'line'});
+g.edges.push({id:111,label:'0.367444',source:'Porphyromonas;',target:'Selenomonas;',size:0.367444,color: 'rgb(93,0,0)',type:'line'});
+g.edges.push({id:112,label:'0.194926',source:'Porphyromonas;',target:'Eikenella;',size:0.194926,color: 'rgb(49,0,0)',type:'line'});
+g.edges.push({id:113,label:'0.429737',source:'Porphyromonas;',target:'Catonella;',size:0.429737,color: 'rgb(109,0,0)',type:'line'});
+g.edges.push({id:114,label:'0.152571',source:'Porphyromonas;',target:'Gemella;',size:0.152571,color: 'rgb(38,0,0)',type:'line'});
+g.edges.push({id:115,label:'-0.283539',source:'Porphyromonas;',target:'Veillonella;',size:0.283539,color: 'rgb(0,72,0)',type:'line'});
+g.edges.push({id:116,label:'0.189527',source:'Cardiobacterium;',target:'Haemophilus;',size:0.189527,color: 'rgb(48,0,0)',type:'line'});
+g.edges.push({id:117,label:'0.470695',source:'Cardiobacterium;',target:'Corynebacterium;',size:0.470695,color: 'rgb(120,0,0)',type:'line'});
+g.edges.push({id:118,label:'-0.239502',source:'Cardiobacterium;',target:'Tannerella;',size:0.239502,color: 'rgb(0,61,0)',type:'line'});
+g.edges.push({id:119,label:'0.303579',source:'Cardiobacterium;',target:'Campylobacter;',size:0.303579,color: 'rgb(77,0,0)',type:'line'});
+g.edges.push({id:120,label:'0.429701',source:'Cardiobacterium;',target:'Capnocytophaga;',size:0.429701,color: 'rgb(109,0,0)',type:'line'});
+g.edges.push({id:121,label:'-0.253874',source:'Cardiobacterium;',target:'Granulicatella;',size:0.253874,color: 'rgb(0,64,0)',type:'line'});
+g.edges.push({id:122,label:'-0.201794',source:'Cardiobacterium;',target:'Prevotella;',size:0.201794,color: 'rgb(0,51,0)',type:'line'});
+g.edges.push({id:123,label:'0.3796',source:'Cardiobacterium;',target:'Eikenella;',size:0.3796,color: 'rgb(96,0,0)',type:'line'});
+g.edges.push({id:124,label:'-0.24728',source:'Cardiobacterium;',target:'Catonella;',size:0.24728,color: 'rgb(0,63,0)',type:'line'});
+g.edges.push({id:125,label:'0.206772',source:'Cardiobacterium;',target:'Veillonella;',size:0.206772,color: 'rgb(52,0,0)',type:'line'});
+g.edges.push({id:126,label:'0.357325',source:'Haemophilus;',target:'Kingella;',size:0.357325,color: 'rgb(91,0,0)',type:'line'});
+g.edges.push({id:127,label:'-0.36039',source:'Haemophilus;',target:'Corynebacterium;',size:0.36039,color: 'rgb(0,91,0)',type:'line'});
+g.edges.push({id:128,label:'-0.426848',source:'Haemophilus;',target:'Tannerella;',size:0.426848,color: 'rgb(0,108,0)',type:'line'});
+g.edges.push({id:129,label:'0.625099',source:'Haemophilus;',target:'Actinomyces;',size:0.625099,color: 'rgb(159,0,0)',type:'line'});
+g.edges.push({id:130,label:'-0.26198',source:'Haemophilus;',target:'Aggregatibacter;',size:0.26198,color: 'rgb(0,66,0)',type:'line'});
+g.edges.push({id:131,label:'-0.440725',source:'Haemophilus;',target:'Prevotella;',size:0.440725,color: 'rgb(0,112,0)',type:'line'});
+g.edges.push({id:132,label:'-0.322159',source:'Haemophilus;',target:'Selenomonas;',size:0.322159,color: 'rgb(0,82,0)',type:'line'});
+g.edges.push({id:133,label:'-0.230598',source:'Haemophilus;',target:'Eikenella;',size:0.230598,color: 'rgb(0,58,0)',type:'line'});
+g.edges.push({id:134,label:'-0.383314',source:'Haemophilus;',target:'Catonella;',size:0.383314,color: 'rgb(0,97,0)',type:'line'});
+g.edges.push({id:135,label:'-0.179221',source:'Haemophilus;',target:'Gemella;',size:0.179221,color: 'rgb(0,45,0)',type:'line'});
+g.edges.push({id:136,label:'0.451992',source:'Haemophilus;',target:'Veillonella;',size:0.451992,color: 'rgb(115,0,0)',type:'line'});
+g.edges.push({id:137,label:'-0.296054',source:'Kingella;',target:'Corynebacterium;',size:0.296054,color: 'rgb(0,75,0)',type:'line'});
+g.edges.push({id:138,label:'-0.397655',source:'Kingella;',target:'Tannerella;',size:0.397655,color: 'rgb(0,101,0)',type:'line'});
+g.edges.push({id:139,label:'0.46306',source:'Kingella;',target:'Actinomyces;',size:0.46306,color: 'rgb(118,0,0)',type:'line'});
+g.edges.push({id:140,label:'-0.298005',source:'Kingella;',target:'Campylobacter;',size:0.298005,color: 'rgb(0,75,0)',type:'line'});
+g.edges.push({id:141,label:'0.272854',source:'Kingella;',target:'Neisseria;',size:0.272854,color: 'rgb(69,0,0)',type:'line'});
+g.edges.push({id:142,label:'-0.293275',source:'Kingella;',target:'Aggregatibacter;',size:0.293275,color: 'rgb(0,74,0)',type:'line'});
+g.edges.push({id:143,label:'0.422412',source:'Kingella;',target:'Capnocytophaga;',size:0.422412,color: 'rgb(107,0,0)',type:'line'});
+g.edges.push({id:144,label:'-0.399637',source:'Kingella;',target:'Prevotella;',size:0.399637,color: 'rgb(0,101,0)',type:'line'});
+g.edges.push({id:145,label:'-0.448442',source:'Kingella;',target:'Selenomonas;',size:0.448442,color: 'rgb(0,114,0)',type:'line'});
+g.edges.push({id:146,label:'0.139183',source:'Kingella;',target:'Eikenella;',size:0.139183,color: 'rgb(35,0,0)',type:'line'});
+g.edges.push({id:147,label:'-0.544267',source:'Kingella;',target:'Catonella;',size:0.544267,color: 'rgb(0,138,0)',type:'line'});
+g.edges.push({id:148,label:'-0.325433',source:'Kingella;',target:'Gemella;',size:0.325433,color: 'rgb(0,82,0)',type:'line'});
+g.edges.push({id:149,label:'0.155154',source:'Corynebacterium;',target:'Tannerella;',size:0.155154,color: 'rgb(39,0,0)',type:'line'});
+g.edges.push({id:150,label:'-0.136196',source:'Corynebacterium;',target:'Actinomyces;',size:0.136196,color: 'rgb(0,34,0)',type:'line'});
+g.edges.push({id:151,label:'-0.1051',source:'Corynebacterium;',target:'Campylobacter;',size:0.1051,color: 'rgb(0,26,0)',type:'line'});
+g.edges.push({id:152,label:'0.192395',source:'Corynebacterium;',target:'Aggregatibacter;',size:0.192395,color: 'rgb(49,0,0)',type:'line'});
+g.edges.push({id:153,label:'0.23269',source:'Corynebacterium;',target:'Capnocytophaga;',size:0.23269,color: 'rgb(59,0,0)',type:'line'});
+g.edges.push({id:154,label:'0.300811',source:'Corynebacterium;',target:'Eikenella;',size:0.300811,color: 'rgb(76,0,0)',type:'line'});
+g.edges.push({id:155,label:'0.269193',source:'Corynebacterium;',target:'Gemella;',size:0.269193,color: 'rgb(68,0,0)',type:'line'});
+g.edges.push({id:156,label:'-0.501788',source:'Tannerella;',target:'Actinomyces;',size:0.501788,color: 'rgb(0,127,0)',type:'line'});
+g.edges.push({id:157,label:'0.295822',source:'Tannerella;',target:'Campylobacter;',size:0.295822,color: 'rgb(75,0,0)',type:'line'});
+g.edges.push({id:158,label:'-0.371352',source:'Tannerella;',target:'Granulicatella;',size:0.371352,color: 'rgb(0,94,0)',type:'line'});
+g.edges.push({id:159,label:'0.906476',source:'Tannerella;',target:'Prevotella;',size:0.906476,color: 'rgb(231,0,0)',type:'line'});
+g.edges.push({id:160,label:'0.811084',source:'Tannerella;',target:'Selenomonas;',size:0.811084,color: 'rgb(206,0,0)',type:'line'});
+g.edges.push({id:161,label:'0.862068',source:'Tannerella;',target:'Catonella;',size:0.862068,color: 'rgb(219,0,0)',type:'line'});
+g.edges.push({id:162,label:'0.198219',source:'Tannerella;',target:'Gemella;',size:0.198219,color: 'rgb(50,0,0)',type:'line'});
+g.edges.push({id:163,label:'-0.276731',source:'Tannerella;',target:'Veillonella;',size:0.276731,color: 'rgb(0,70,0)',type:'line'});
+g.edges.push({id:164,label:'-0.217116',source:'Actinomyces;',target:'Campylobacter;',size:0.217116,color: 'rgb(0,55,0)',type:'line'});
+g.edges.push({id:165,label:'-0.458373',source:'Actinomyces;',target:'Neisseria;',size:0.458373,color: 'rgb(0,116,0)',type:'line'});
+g.edges.push({id:166,label:'-0.47022',source:'Actinomyces;',target:'Aggregatibacter;',size:0.47022,color: 'rgb(0,119,0)',type:'line'});
+g.edges.push({id:167,label:'-0.565684',source:'Actinomyces;',target:'Prevotella;',size:0.565684,color: 'rgb(0,144,0)',type:'line'});
+g.edges.push({id:168,label:'-0.442075',source:'Actinomyces;',target:'Selenomonas;',size:0.442075,color: 'rgb(0,112,0)',type:'line'});
+g.edges.push({id:169,label:'-0.350223',source:'Actinomyces;',target:'Eikenella;',size:0.350223,color: 'rgb(0,89,0)',type:'line'});
+g.edges.push({id:170,label:'-0.530517',source:'Actinomyces;',target:'Catonella;',size:0.530517,color: 'rgb(0,135,0)',type:'line'});
+g.edges.push({id:171,label:'0.135294',source:'Actinomyces;',target:'Gemella;',size:0.135294,color: 'rgb(34,0,0)',type:'line'});
+g.edges.push({id:172,label:'0.123153',source:'Actinomyces;',target:'Veillonella;',size:0.123153,color: 'rgb(31,0,0)',type:'line'});
+g.edges.push({id:173,label:'-0.168174',source:'Campylobacter;',target:'Granulicatella;',size:0.168174,color: 'rgb(0,42,0)',type:'line'});
+g.edges.push({id:174,label:'0.497584',source:'Campylobacter;',target:'Prevotella;',size:0.497584,color: 'rgb(126,0,0)',type:'line'});
+g.edges.push({id:175,label:'0.566781',source:'Campylobacter;',target:'Selenomonas;',size:0.566781,color: 'rgb(144,0,0)',type:'line'});
+g.edges.push({id:176,label:'0.451395',source:'Campylobacter;',target:'Catonella;',size:0.451395,color: 'rgb(115,0,0)',type:'line'});
+g.edges.push({id:177,label:'-0.217544',source:'Campylobacter;',target:'Gemella;',size:0.217544,color: 'rgb(0,55,0)',type:'line'});
+g.edges.push({id:178,label:'0.208571',source:'Campylobacter;',target:'Veillonella;',size:0.208571,color: 'rgb(53,0,0)',type:'line'});
+g.edges.push({id:179,label:'0.363105',source:'Neisseria;',target:'Aggregatibacter;',size:0.363105,color: 'rgb(92,0,0)',type:'line'});
+g.edges.push({id:180,label:'0.338604',source:'Neisseria;',target:'Capnocytophaga;',size:0.338604,color: 'rgb(86,0,0)',type:'line'});
+g.edges.push({id:181,label:'0.255008',source:'Neisseria;',target:'Granulicatella;',size:0.255008,color: 'rgb(65,0,0)',type:'line'});
+g.edges.push({id:182,label:'0.304485',source:'Neisseria;',target:'Eikenella;',size:0.304485,color: 'rgb(77,0,0)',type:'line'});
+g.edges.push({id:183,label:'-0.396044',source:'Neisseria;',target:'Gemella;',size:0.396044,color: 'rgb(0,100,0)',type:'line'});
+g.edges.push({id:184,label:'-0.230074',source:'Aggregatibacter;',target:'Granulicatella;',size:0.230074,color: 'rgb(0,58,0)',type:'line'});
+g.edges.push({id:185,label:'0.532803',source:'Aggregatibacter;',target:'Prevotella;',size:0.532803,color: 'rgb(135,0,0)',type:'line'});
+g.edges.push({id:186,label:'0.1192',source:'Aggregatibacter;',target:'Eikenella;',size:0.1192,color: 'rgb(30,0,0)',type:'line'});
+g.edges.push({id:187,label:'0.488176',source:'Aggregatibacter;',target:'Catonella;',size:0.488176,color: 'rgb(124,0,0)',type:'line'});
+g.edges.push({id:188,label:'-0.355314',source:'Aggregatibacter;',target:'Veillonella;',size:0.355314,color: 'rgb(0,90,0)',type:'line'});
+g.edges.push({id:189,label:'0.598017',source:'Capnocytophaga;',target:'Eikenella;',size:0.598017,color: 'rgb(152,0,0)',type:'line'});
+g.edges.push({id:190,label:'-0.254162',source:'Capnocytophaga;',target:'Catonella;',size:0.254162,color: 'rgb(0,64,0)',type:'line'});
+g.edges.push({id:191,label:'-0.100393',source:'Capnocytophaga;',target:'Veillonella;',size:0.100393,color: 'rgb(0,25,0)',type:'line'});
+g.edges.push({id:192,label:'-0.363269',source:'Granulicatella;',target:'Prevotella;',size:0.363269,color: 'rgb(0,92,0)',type:'line'});
+g.edges.push({id:193,label:'-0.342017',source:'Granulicatella;',target:'Selenomonas;',size:0.342017,color: 'rgb(0,87,0)',type:'line'});
+g.edges.push({id:194,label:'-0.11641',source:'Granulicatella;',target:'Eikenella;',size:0.11641,color: 'rgb(0,29,0)',type:'line'});
+g.edges.push({id:195,label:'-0.312613',source:'Granulicatella;',target:'Catonella;',size:0.312613,color: 'rgb(0,79,0)',type:'line'});
+g.edges.push({id:196,label:'0.209669',source:'Granulicatella;',target:'Gemella;',size:0.209669,color: 'rgb(53,0,0)',type:'line'});
+g.edges.push({id:197,label:'0.42005',source:'Granulicatella;',target:'Veillonella;',size:0.42005,color: 'rgb(107,0,0)',type:'line'});
+g.edges.push({id:198,label:'0.903165',source:'Prevotella;',target:'Selenomonas;',size:0.903165,color: 'rgb(230,0,0)',type:'line'});
+g.edges.push({id:199,label:'0.911007',source:'Prevotella;',target:'Catonella;',size:0.911007,color: 'rgb(232,0,0)',type:'line'});
+g.edges.push({id:200,label:'-0.130263',source:'Prevotella;',target:'Veillonella;',size:0.130263,color: 'rgb(0,33,0)',type:'line'});
+g.edges.push({id:201,label:'0.143441',source:'Selenomonas;',target:'Eikenella;',size:0.143441,color: 'rgb(36,0,0)',type:'line'});
+g.edges.push({id:202,label:'0.817236',source:'Selenomonas;',target:'Catonella;',size:0.817236,color: 'rgb(208,0,0)',type:'line'});
+g.edges.push({id:203,label:'-0.120419',source:'Catonella;',target:'Veillonella;',size:0.120419,color: 'rgb(0,30,0)',type:'line'});
+g.edges.push({id:204,label:'asdadasdasdassdasdasd',source:'Gemella;',target:'Veillonella;',size:0.141246,color: 'rgb(0,36,0)',type:'line'});
+var s = new sigma({graph:g,renderer:{container: document.getElementById('container'),type:'canvas'},
+settings: {edgeLabelSize: 'proportional',edgeLabelThreshold: 3,minEdgeSize: 0.1}
+});
+s.refresh();
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Cross Validate
+perl predict.pl -s 13_classes_scheme -a 13_classes_annots -i MIPS_P -m WEIGHTED_AVG -p c -v 0 -r 1 > cross_validate.txt
+
+# Predict labels for unannotated proteins
+perl predict.pl -s 13_classes_scheme -a 13_classes_annots -o predictions.txt -i MIPS_P -m WEIGHTED_AVG -p p -v 0 -r 1
+
+# Compute FS-Weights for edges
+perl predict.pl -s 13_classes_scheme -a 13_classes_annots -o weights.txt -i MIPS_P -p w -v 0 -r 1
+
+# Compute FS-Weights for edges without annotation information (no reliability estimation)
+perl predict.pl -o weights_wo_reliability.txt -i MIPS_P -p w -v 0 -r 1
