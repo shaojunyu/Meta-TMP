@@ -1,4 +1,4 @@
-// Updated at May 18, 2016
+// Updated at Aug 02, 2016
 // Bioinformatics Group, Single-Cell Research Center, QIBEBT, CAS
 
 #include <iostream>
@@ -10,9 +10,10 @@
 #include <unistd.h>
 
 #include "utility.h"
+#include "version.h"
 
 #define MAX_BOOT 1000
-#define DEF_BOOT 20
+#define DEF_BOOT 200
 
 using namespace std;
 
@@ -37,7 +38,7 @@ map <string, string> OTU_Taxa;
 
 int printhelp(){
     
-    cout << "Random_rare : " << endl;
+    cout << "Random_rare : " << Version << endl;
     cout << "Usage : " << endl;
     cout << "rand-rare [-options] value" << endl;
     cout << "\toption : " << endl;
@@ -46,8 +47,8 @@ int printhelp(){
     cout << "\t-l Input filename lis [Conflict with -i]" << endl;
     cout << "\t-p List file path prefix for '-l' [Optional]" << endl;
     cout << "\t-o Output path, default is \"Rare_Out\"" << endl;
-    cout << "\t-s Rarefaction sequence depth [Required]" << endl;
-    cout << "\t-b Bootstrap [Default is 20, Maximum is " << MAX_BOOT << "]" << endl;
+    cout << "\t-s Rarefaction depth [Required]" << endl;
+    cout << "\t-b Bootstrap for sequence number normalization, default is " << DEF_BOOT << ", maximum is " << MAX_BOOT << endl;
     cout << "\t-h Help" << endl;
     
     exit(0);

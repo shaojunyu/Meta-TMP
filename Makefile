@@ -22,6 +22,7 @@ EXE_FSQ=bin/format-seq
 EXE_RCV=bin/rare-curv
 EXE_CFN=bin/class-func-nsti
 EXE_RAR=bin/rand-rare
+EXE_UTX=bin/update-taxa
 
 tax:$(OBJ_TAX) src/frame.cpp
 	$(CC) -c -o $(OBJ_EXT) src/ExtractRNA.cpp $(HASHLIB)
@@ -42,6 +43,7 @@ tax:$(OBJ_TAX) src/frame.cpp
 	$(CC) -o $(EXE_RCV) src/rare_curv.cpp $(HASHLIB) $(BUILDFLG) $(SYSLIB)
 	$(CC) -o $(EXE_CFN) src/class_func_nsti.cpp $(HASHLIB) $(BUILDFLG) $(SYSLIB)
 	$(CC) -o $(EXE_RAR) src/rand_rare.cpp $(HASHLIB) $(BUILDFLG)
-	$(CC) -o bin/network_virtualization src/network_virtualization.cpp $(HASHLIB) $(BUILDFLG)
+	$(CC) -o $(EXE_UTX) src/update_taxa.cpp $(HASHLIB) $(BUILDFLG)
+
 clean:
 	rm -rf bin/* src/*.o

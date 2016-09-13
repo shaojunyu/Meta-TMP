@@ -1,4 +1,4 @@
-// Updated at May 13, 2016
+// Updated at July 28, 2016
 // Updated by Xiaoquan Su
 // Bioinformatics Group, Single-Cell Research Center, QIBEBT, CAS
 //version 3.1 or above with _Table_Format
@@ -155,7 +155,7 @@ int Load_Taxa(vector <string> infilename, int level){
     for (int i = 0; i < infilename.size(); i ++){    
         ifstream infile(infilename[i].c_str(), ifstream::in);
         if (!infile){
-                     cerr << "Error: Cannot open input file : " << infilename[1] << endl;
+                     cerr << "Error: Cannot open input file : " << infilename[i] << endl;
                      continue;
                      }
                       
@@ -199,12 +199,21 @@ int Load_Taxa(vector <string> infilename, int level){
                                                              }
                                             taxa_buffer.push_back(taxa);
                                             
-                                            if (j == 6){ //species
+                                            //add genus info for species
+                                            if (j == 6){ 
                                                taxa = taxa_buffer[5];
                                                taxa = taxa.substr(0, taxa.size()-1);
                                                taxa += "_";
                                                taxa += taxa_buffer[6];
                                                }
+                                            
+                                            //add prefix for genus
+                                            if (j == 5){
+                                                  string taxa_prefix = taxa_buffer[j-1];
+                                                  taxa_prefix = taxa_prefix.substr(0, taxa_prefix.size() - 1);
+                                                  if (taxa_prefix.size() > 3) taxa_prefix = taxa_prefix.substr(0, 3);
+                                                  taxa = taxa_prefix + "_" + taxa;
+                                                  }
                                             }
 
                               

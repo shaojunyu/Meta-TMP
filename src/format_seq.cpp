@@ -1,4 +1,4 @@
-// Updated at June 6, 2016
+// Updated at July 8, 2016
 // Bioinformatics Group, Single-Cell Research Center, QIBEBT, CAS
 
 #include <iostream>
@@ -168,16 +168,7 @@ void Reformat(string infilename){
         while(getline(infile, buffer)){
                  if(buffer[0] == '@'){                              
                             seq_count ++;
-                            if (seq.size() > 0){
-                                            outfile << id << endl;
-                                            outfile << seq << endl;
-                                            outfile << qual_id << endl;
-                                            outfile << qual << endl;
-                                            seq_out_count ++;                                            
-                                            }
-                            else if (seq_count != 1)
-                                    is_ok = false;
-                            
+                                                        
                             id = buffer;
                             is_ok = Check_Id(id, seq_count) && is_ok;
                             seq = "";
@@ -197,23 +188,23 @@ void Reformat(string infilename){
                             
                             if (seq_line_count > 1)
                                is_ok = false;
+                            
+                            //get qual
+                            for (int i = 0; i < seq_line_count; i ++){
+                                getline(infile, buffer);
+                                qual += buffer;
+                                }
+                                                            
+                            outfile << id << endl;
+                            outfile << seq << endl;
+                            outfile << qual_id << endl;
+                            outfile << qual << endl;
+                            seq_out_count ++;                                               
                             }             
                  
-                 else {
-                      is_ok = (qual.size() == 0) && is_ok;
-                      qual += buffer;
-                      }
-                 }
-        if (seq.size() > 0){
-           outfile << id << endl;
-           outfile << seq << endl;
-           outfile << qual_id << endl;
-           outfile << qual << endl;
-           seq_out_count ++;                                            
-           }
-        else is_ok = false;
+              else is_ok = false;
         }
-   
+   }
    cout << seq_count << " sequences in total" << endl;
    cout << seq_out_count << " sequences output" << endl;
    

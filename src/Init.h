@@ -1,4 +1,4 @@
-// Updated at June 3, 2016
+// Updated at July 7, 2016
 // Bioinformatics Group, Single-Cell Research Center, QIBEBT, CAS
 
 #include <iostream>
@@ -181,8 +181,7 @@ int Parse_Para(int argc, char * argv[], _Para &para){ //Parse Parameters
                                                      exit(0);
                                                      }
                                        para.Infilename = argv[i+1];
-                                       para.Type = 1;   
-                                       para.Is_format_check = true;                                                                         
+                                       para.Type = 1;                                                                                                          
                                        break;  
                             
                             case 'r' : if (para.Type != -1){
@@ -214,7 +213,10 @@ int Parse_Para(int argc, char * argv[], _Para &para){ //Parse Parameters
                                                              default: para.Align_mode = "very-sensitive-local"; break;                   
                                               }
                                         break; //Default is "very-sensitive-local"
-                            case 'k' : if ((argv[i+1][0] == 't') || (argv[i+1][0]) == 'T' ) para.Is_format_check = true; break;             
+                            case 'k' : if ((argv[i+1][0] == 't') || (argv[i+1][0] == 'T' )) para.Is_format_check = true; 
+                                       else if ((argv[i+1][0] == 'f') || (argv[i+1][0] == 'F' )) para.Is_format_check = false;
+                                       break;
+                                        
                             case 'L' : para.Length_filter = atoi(argv[i+1]);
                                        if (para.Length_filter < 0){
                                                    cerr << "Error: Length Filter must be equal or larger than 0" << endl;

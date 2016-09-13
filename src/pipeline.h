@@ -1,4 +1,4 @@
-// Updated at June 3, 2016
+// Updated at July 7, 2016
 // Updated by Xiaoquan Su
 // Bioinformatics Group, Single-Cell Research Center, QIBEBT, CAS
 
@@ -8,7 +8,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 #include <sys/stat.h>
 #include <omp.h>
@@ -334,9 +333,11 @@ int Parse_Para(int argc, char * argv[]){
                                                              }
                                        break; // Default is "fr"
                                        
-                            case 'M': if ((argv[i+1][0] == 'T') || (argv[i+1][0]) == 't' ) Seq_type = 'm'; Is_format_check = 'T'; break;
+                            case 'M': if ((argv[i+1][0] == 'T') || (argv[i+1][0]) == 't' ) Seq_type = 'm'; break;
                             case 'r': Length_t = atoi(argv[i+1]); break; 
-                            case 'k': if ((argv[i+1][0] == 't') || (argv[i+1][0]) == 'T' ) Is_format_check = 'T'; break; 
+                            case 'k': if ((argv[i+1][0] == 't') || (argv[i+1][0] == 'T' )) Is_format_check = 'T'; 
+                                      else if ((argv[i+1][0] == 'f') || (argv[i+1][0] == 'F' )) Is_format_check = 'F';
+                                      break; 
                             
                             //adv args                                                                                                                  
                             case 'f': if ((argv[i+1][0] == 'f') || (argv[i+1][0]) == 'F' ) Is_func = false; break;

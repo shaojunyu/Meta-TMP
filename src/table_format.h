@@ -34,8 +34,7 @@ class _Table_Format{
     
     unsigned int Output_Table(ostream * outfile); //row: sample, column: feature
     unsigned int Output_Table(const char * outfilename);
-    void Output_Cytoscape(const char * outfilename, float threshold);
-
+    
      //Honglei, please implement the following function
     unsigned int Output_Table_Rev(ostream * outfile); //row: feature, column: sample
     unsigned int Output_Table_Rev(const char * outfilename); //row: feature, column: sample
@@ -65,14 +64,13 @@ class _Table_Format{
     float Calc_Corr_P(vector <float> sam_m, vector <float> sam_n);
     
     void Calc_Dist_Matrix(const char * outfilename, int metrics, int coren, bool is_sim); //0: cost 1: eu dist
-    void Calc_Corr_Matrix(const char * outfilename, int metrics, int coren, bool is_output_cytoscape, float threshold); //0: s-corr 1: p-corr
-    void Calc_Corr_Matrix_based_on_co_occurrence(const char * outfilename, int metrics, int coren, float co_occurrence, bool is_output_cytoscape, float threshold); //0: s-corr 1: p-corr
+    void Calc_Corr_Matrix(const char * outfilename, int metrics, int coren); //0: s-corr 1: p-corr
     
-
     private:
     vector <string> Samples;
     vector <string> Features;
     vector < vector <float> > Abd;
+    
     map <string, int> Feature_hash;
     
     bool * Max_filtered;
@@ -153,27 +151,20 @@ unsigned int _Table_Format::Output_Table(ostream * outfile){
     unsigned int out_count = 0;
     
     *outfile << "SampleID";
-    for (int i = 0; i < Features.size(); i++) {
-      // if (!Check_Filter(Features[i])) {
-        *outfile << "\t" << Features[i];
-        out_count++;
-      // }
-    }
-
+    for (int i = 0; i < Features.size(); i ++)
+        if (!Check_Filter(Features[i])){
+           *outfile << "\t" << Features[i];
+           out_count ++;
+           }
     *outfile << endl;
-
-    for (int i = 0; i < Samples.size(); i++) {
-      *outfile << Samples[i];
-      for (int j = 0; j < Features.size(); j++) {
-        if (!Check_Filter(Features[j])) {
-          *outfile << "\t" << Abd[i][j];
-        }else{
-          *outfile << "\t" << 0;
+    
+    for (int i = 0; i < Samples.size(); i ++){
+        *outfile << Samples[i];
+        for (int j = 0; j < Features.size(); j ++)
+            if (!Check_Filter(Features[j]))
+               *outfile << "\t" << Abd[i][j];
+        *outfile << endl;
         }
-      }
-
-      *outfile << endl;
-    }
     return out_count;
     }
 
@@ -246,28 +237,6 @@ unsigned int _Table_Format::Output_Table_Rev(const char * outfilename){
       return out_count;
       }
 // 
-
-void _Table_Format::Output_Cytoscape(const char * outfilename, float threshold){
-  ofstream outfile(outfilename, ofstream::out);
-  if (!outfile) {
-    cerr << "Error: Cannot open output file: " << outfilename << endl;
-    return;
-  }
-
-  for (int i = 0; i < Samples.size(); ++i)
-  {
-    for (int j = i+1; j < Samples.size(); ++j)
-    {
-      // if (corr_matrix[i * Samples.size() + j] >= threshold)
-      // {
-      //   outfile<<Samples[i]<<"\t"<<corr_matrix[i * Samples.size() + j]<<"\t"<<Samples[j]<<endl;
-      // }
-    }
-  }
-
-  outfile.close();
-  outfile.clear();
-}
  
 void _Table_Format::Filter_Max(float max){
 
@@ -584,8 +553,9 @@ void _Table_Format::Calc_Dist_Matrix(const char * outfilename, int metrics, int 
       outfile.clear();
       }
 
-void _Table_Format::Calc_Corr_Matrix(const char * outfilename, int metrics, int coren, bool is_output_cytoscape, float threshold){
+void _Table_Format::Calc_Corr_Matrix(const char * outfilename, int metrics, int coren){
      
+
      int * order_m = new int [Samples.size() * Samples.size() / 2 + Samples.size()];
      int * order_n = new int [Samples.size() * Samples.size() / 2 + Samples.size()];
      int iter = 0;
@@ -636,119 +606,9 @@ void _Table_Format::Calc_Corr_Matrix(const char * outfilename, int metrics, int 
 
       outfile.close();
       outfile.clear();
-
-  if (is_output_cytoscape)
-  {
-    char cytoscape_file[200];
-    sprintf(cytoscape_file, "%s_to_Cytoscape.out", outfilename);
-    outfile.open(cytoscape_file, ofstream::out);
-    for (int i = 0; i < Samples.size(); ++i)
-    {
-      for (int j = i+1; j < Samples.size(); ++j)
-      {
-        if (corr_matrix[i * Samples.size() + j] >= threshold || corr_matrix[i * Samples.size() + j] <= -threshold)
-        {
-          outfile << Samples[i] <<"\t" << Samples[j] << "\t" << corr_matrix[i * Samples.size() + j] <<endl;
-        }
       }
-    }
-    outfile.close();
-    outfile.clear();
-  }
-}
 
-
-void _Table_Format::Calc_Corr_Matrix_based_on_co_occurrence(const char * outfilename, int metrics, int coren, float co_occurrence, bool is_output_cytoscape, float threshold){
-  //yusj
-  int *order_m = new int[Samples.size() * Samples.size() / 2 + Samples.size()];
-  int *order_n = new int[Samples.size() * Samples.size() / 2 + Samples.size()];
-  int iter = 0;
-
-  for (int i = 0; i < Samples.size(); i++)
-    for (int j = i; j < Samples.size(); j++) {
-      order_m[iter] = i;
-      order_n[iter] = j;
-      iter++;
-    }
-
-  ofstream outfile(outfilename, ofstream::out);
-  if (!outfile) {
-    cerr << "Error: Cannot open output file: " << outfilename << endl;
-    return;
-  }
-
-  float *corr_matrix = new float[Samples.size() * Samples.size()];
-  memset(corr_matrix, 0, Samples.size() * Samples.size() * sizeof(float));
-
-  omp_set_num_threads(coren);
-
-#pragma omp parallel for schedule(dynamic, 1)
-  for (int i = 0; i < iter; i++) {
-    int m = order_m[i];
-    int n = order_n[i];
-
-    //检验共出现概率
-    float temp_co = 0;
-    for (int j = 0; j < Abd[m].size(); ++j)
-    {
-      if (Abd[m][j] != 0 && Abd[n][j] != 0)
-      {
-        temp_co++;
-      }
-    }
-    temp_co = temp_co / Abd[m].size();
-    if (temp_co >= co_occurrence) {
-      if (metrics == 0)
-        corr_matrix[m * Samples.size() + n] = Calc_Corr_S(m, n);
-      else
-        corr_matrix[m * Samples.size() + n] = Calc_Corr_P(m, n);
-    }else{
-      corr_matrix[m * Samples.size() + n] = 0;
-      if (m == n )
-      {
-        corr_matrix[m * Samples.size() + n] = 1;
-      }
-    }
-
-    corr_matrix[n * Samples.size() + m] = corr_matrix[m * Samples.size() + n];
-  }
-
-  outfile << "\t";
-  for (int i = 0; i < Samples.size(); i++) outfile << "\t" << Samples[i];
-  outfile << endl;
-
-  for (int i = 0; i < Samples.size(); i++) {
-    outfile << Samples[i];
-    for (int j = 0; j < Samples.size(); j++) {
-      outfile << "\t" << corr_matrix[i * Samples.size() + j];
-    }
-    outfile << endl;
-  }
-
-  outfile.close();
-  outfile.clear();
-
-  if (is_output_cytoscape)
-  {
-    char cytoscape_file[200];
-    sprintf(cytoscape_file, "%s_to_Cytoscape.out", outfilename);
-    outfile.open(cytoscape_file, ofstream::out);
-    for (int i = 0; i < Samples.size(); ++i)
-    {
-      for (int j = i+1; j < Samples.size(); ++j)
-      {
-        if (corr_matrix[i * Samples.size() + j] >= threshold || corr_matrix[i * Samples.size() + j] <= -threshold)
-        {
-          outfile << Samples[i] << "\t" << Samples[j] << "\t" << corr_matrix[i * Samples.size() + j] << endl;
-        }
-      }
-    }
-    outfile.close();
-    outfile.clear();
-  }
-}
-
-
+    
 void _Table_Format::BubbleSort(float *array1, int *rank1, int len){
 
      float temp;

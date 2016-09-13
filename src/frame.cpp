@@ -1,4 +1,4 @@
-// Updated at May 20, 2016
+// Updated at May 25, 2016
 // Bioinformatics Group, Single-Cell Research Center, QIBEBT, CAS
 
 #include <iostream>

@@ -32,10 +32,6 @@ string Check_Env(){
     
     string path =  getenv("ParallelMETA");
     return path;
-        
-    //debug
-    //return "/home/gene/suxq/work/parallel-meta/src"; 
-    //return "/mnt/data5/suxq/parallel-meta/";
     }
 
 int Check_Path(const char * path, int type){
