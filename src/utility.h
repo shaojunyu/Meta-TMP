@@ -23,14 +23,14 @@ using namespace std;
 
 string Check_Env(){
     
-    if (getenv("ParallelMETA") == NULL){
+    if (getenv("MetaTMP") == NULL){
                                
                                cerr << "Error: Please set the environment variable \"ParallelMETA\" to the directory" << endl;
                                exit(0);
                                
                                    }
     
-    string path =  getenv("ParallelMETA");
+    string path =  getenv("MetaTMP");
     return path;
     }
 
